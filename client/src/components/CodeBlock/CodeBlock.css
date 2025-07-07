@@ -1,0 +1,50 @@
+.code-block-container {
+  position: relative;
+  margin: 10px 0; /* Add some margin around the code block */
+}
+
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  padding: 5px 10px;
+  background-color: #333333; /* Darker button */
+  color: #e0e0e0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8em;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.copy-button:hover {
+  opacity: 1;
+  background-color: #555555; /* Slightly lighter on hover */
+}
+
+/* Responsive Design - CodeBlock specific */
+@media (max-width: 600px) {
+  .code-block-container {
+    margin: 8px 0;
+  }
+  .copy-button {
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 0.7em;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .code-block-container {
+    margin: 9px 0;
+  }
+  .copy-button {
+    top: 9px;
+    right: 9px;
+    padding: 5px 9px;
+    font-size: 0.75em;
+  }
+}

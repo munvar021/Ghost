@@ -1,0 +1,109 @@
+html {
+  box-sizing: border-box;
+  font-size: 16px; /* Base font size for responsiveness */
+  height: 100%; /* Ensure html takes full height */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #121212; /* Very dark grey, almost black */
+  color: #e0e0e0; /* Light grey for readability */
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Styling for code blocks */
+pre {
+  background-color: #1e1e1e; /* Slightly lighter dark grey for code background */
+  padding: 15px;
+  border-radius: 10px;
+  overflow-x: auto;
+  position: relative;
+  margin: 10px 0;
+}
+
+pre code {
+  font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+/* Styling for the copy button */
+pre button {
+  background-color: #333333; /* Darker button */
+  color: #e0e0e0;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8em;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease-in-out;
+}
+
+pre button:hover {
+  opacity: 1;
+}
+
+/* Responsive Design - Global */
+@media (max-width: 600px) {
+  body {
+    font-size: 12px;
+  }
+  pre {
+    padding: 10px;
+    border-radius: 8px;
+  }
+  pre button {
+    padding: 4px 8px;
+    font-size: 0.7em;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  body {
+    font-size: 14px;
+  }
+  pre {
+    padding: 12px;
+    border-radius: 9px;
+  }
+  pre button {
+    padding: 5px 10px;
+    font-size: 0.8em;
+  }
+}
+
+@media (min-width: 901px) {
+  body {
+    font-size: 16px;
+  }
+  pre {
+    padding: 15px;
+    border-radius: 10px;
+  }
+  pre button {
+    padding: 5px 10px;
+    font-size: 0.8em;
+  }
+}

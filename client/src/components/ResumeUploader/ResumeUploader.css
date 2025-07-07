@@ -1,0 +1,66 @@
+.resume-uploader {
+  margin-bottom: 1.5rem; /* Increased margin */
+  animation: fadeInScale 0.8s ease-out 0.5s forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.resume-uploader input[type="file"] {
+  display: none;
+}
+
+.resume-uploader label {
+  background-color: #61dafb;
+  color: #121212; /* Dark text for contrast */
+  padding: 0.8rem 1.8rem; /* Increased padding */
+  border-radius: 30px; /* More rounded */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+  font-weight: bold;
+  letter-spacing: 0.8px; /* Increased letter spacing */
+  text-transform: uppercase;
+  font-size: 0.9rem; /* Slightly larger font size */
+  border: 1px solid #61dafb; /* Subtle border */
+}
+
+.resume-uploader label:hover {
+  background-color: #21a1f2;
+  transform: translateY(-5px) scale(1.05); /* More pronounced hover effect */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+}
+
+.resume-uploader label:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design - ResumeUploader specific */
+@media (max-width: 600px) {
+  .resume-uploader {
+    margin-bottom: 1rem;
+  }
+  .resume-uploader label {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    border-radius: 25px;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .resume-uploader label {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+    border-radius: 28px;
+  }
+}
