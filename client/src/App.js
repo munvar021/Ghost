@@ -33,37 +33,47 @@ const App = () => {
     }
   };
 
-  const speak = useCallback((text) => {
-    console.log("Attempting to speak: ", text);
-    const utterance = new window.SpeechSynthesisUtterance(text);
-    utterance.onstart = () => {
-      console.log("Speech synthesis started.");
-      stopRecognition();
-    };
-    utterance.onend = () => {
-      console.log("Speech synthesis ended.");
-      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-        startRecognitionRef.current();
-      }
-    };
-    utterance.onerror = (event) => {
-      console.error("Speech synthesis error:", event.error);
-    };
-    window.speechSynthesis.speak(utterance);
-  }, [stopRecognition]);
+  const speak = useCallback(
+    (text) => {
+      console.log("Attempting to speak: ", text);
+      const utterance = new window.SpeechSynthesisUtterance(text);
+      utterance.onstart = () => {
+        console.log("Speech synthesis started.");
+        stopRecognition();
+      };
+      utterance.onend = () => {
+        console.log("Speech synthesis ended.");
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+          startRecognitionRef.current();
+        }
+      };
+      utterance.onerror = (event) => {
+        console.error("Speech synthesis error:", event.error);
+      };
+      window.speechSynthesis.speak(utterance);
+    },
+    [stopRecognition]
+  );
 
-  const getAIResponse = useCallback((question) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      console.log("Sending question via WebSocket:", question);
-      wsRef.current.send(JSON.stringify({ question, resumeId }));
-    } else {
-      console.error("WebSocket is not connected.");
-      setTranscript(prev => [...prev, { type: "error", text: "Connection lost. Please refresh." }]);
-    }
-  }, [resumeId]);
+  const getAIResponse = useCallback(
+    (question) => {
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        console.log("Sending question via WebSocket:", question);
+        wsRef.current.send(JSON.stringify({ question, resumeId }));
+      } else {
+        console.error("WebSocket is not connected.");
+        setTranscript((prev) => [
+          ...prev,
+          { type: "error", text: "Connection lost. Please refresh." },
+        ]);
+      }
+    },
+    [resumeId]
+  );
 
   const startRecognition = useCallback(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       console.error("Speech recognition not supported in this browser.");
       return;
@@ -81,7 +91,8 @@ const App = () => {
     };
 
     recognition.onresult = (event) => {
-      const question = event.results[event.results.length - 1][0].transcript.trim();
+      const question =
+        event.results[event.results.length - 1][0].transcript.trim();
       console.log("Recognition result: ", question);
       setTranscript((prev) => [...prev, { type: "question", text: question }]);
       getAIResponse(question);
@@ -95,7 +106,11 @@ const App = () => {
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
       setIsRecognitionActive(false);
-      if (event.error === "no-speech" && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      if (
+        event.error === "no-speech" &&
+        wsRef.current &&
+        wsRef.current.readyState === WebSocket.OPEN
+      ) {
         console.log("No speech detected, restarting recognition...");
         startRecognitionRef.current();
       }
@@ -125,11 +140,17 @@ const App = () => {
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.answer) {
-        setTranscript((prev) => [...prev, { type: "answer", text: data.answer }]);
+        setTranscript((prev) => [
+          ...prev,
+          { type: "answer", text: data.answer },
+        ]);
         speakRef.current(data.answer);
       } else if (data.error) {
         console.error("WebSocket server error:", data.error);
-        setTranscript(prev => [...prev, { type: "error", text: `Server error: ${data.error}` }]);
+        setTranscript((prev) => [
+          ...prev,
+          { type: "error", text: `Server error: ${data.error}` },
+        ]);
       }
     };
 
@@ -156,8 +177,12 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <div className="header-content">
-          <img src="%PUBLIC_URL%/logo.svg" className="App-logo" alt="logo" />
-          <h1>AI Interview Assistant</h1>
+          <img
+            src="https://static.vecteezy.com/system/resources/previews/048/847/814/non_2x/halloween-famine-ghost-logo-illustration-silhouette-design-black-and-white-vector.jpg"
+            className="App-logo"
+            alt="logo"
+          />
+          <h1>Ghost Candidate</h1>
         </div>
       </header>
       <main className={!resumeId ? "main-centered" : "main-compact"}>
@@ -176,7 +201,9 @@ const App = () => {
       {resumeId && (
         <button
           className="mic-button"
-          onClick={() => startRecognitionRef.current && startRecognitionRef.current()}
+          onClick={() =>
+            startRecognitionRef.current && startRecognitionRef.current()
+          }
           disabled={!isWsConnected || isRecognitionActive}
           title={isWsConnected ? "Speak now" : "Connecting..."}
         >

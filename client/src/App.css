@@ -3,30 +3,37 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #121212; /* Ensure app background matches body */
+  background-color: var(--dark-bg);
 }
 
 .App-header {
-  background-color: #1a1a1a; /* Darker shade for header */
-  padding: 10px 20px; /* Adjusted padding for compactness */
-  color: #e0e0e0;
+  background-color: var(--glass-bg);
+  backdrop-filter: blur(10px); /* Glassmorphism blur */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  padding: 10px 20px; /* Compact padding */
+  color: var(--text-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  animation: slideInFromTop 0.8s ease-out;
-  border-bottom: 1px solid #333; /* Subtle border */
+  animation: slideInFromTop 0.6s ease-out;
+  border-bottom: 1px solid var(--glass-border);
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  justify-content: center;
+  align-items: center;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 15px; /* Space between logo and title */
+  gap: 15px; /* Compact gap */
 }
 
 .App-logo {
-  height: 40px; /* Adjust logo size */
+  height: 40px; /* Compact logo size */
   pointer-events: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.App-logo:hover {
+  transform: rotate(360deg) scale(1.05);
 }
 
 @keyframes slideInFromTop {
@@ -46,86 +53,55 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-}
-
-.main-centered {
-  justify-content: center;
-  padding: 1rem;
-}
-
-.main-compact {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  justify-content: center; /* Center content vertically */
 }
 
 .status-banner {
-  margin-bottom: 1rem;
+  margin-bottom: 1rem; /* Compact margin */
   font-style: italic;
-  color: #bbbbbb;
+  color: var(--text-color);
   animation: pulse 1.5s infinite alternate;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 @keyframes pulse {
   0% {
     opacity: 0.7;
+    transform: scale(1);
   }
   50% {
     opacity: 1;
+    transform: scale(1.02);
   }
   100% {
     opacity: 0.7;
+    transform: scale(1);
   }
 }
 
-.controls {
-  margin-top: 1rem;
-}
-
-.controls p {
-  color: #61dafb;
-  font-weight: bold;
-  animation: pulse 1s infinite alternate;
-}
-
-/* Floating Mic Button */
 .mic-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #61dafb;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
   border: none;
   border-radius: 50%;
-  width: 55px; /* Slightly larger */
-  height: 55px;
+  width: 55px; /* Compact size */
+  height: 55px; /* Compact size */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 22px; /* Slightly larger icon */
+  font-size: 22px;
   cursor: pointer;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   transition: all 0.3s ease-in-out;
   z-index: 1000;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
 }
 
 .mic-button:hover {
-  background-color: #21a1f2;
-  transform: scale(1.1);
+  background-color: var(--button-hover-bg);
+  transform: scale(1.1) translateY(-3px); /* More pronounced hover */
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
 }
 
@@ -134,8 +110,7 @@ main {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive Design - App specific */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .App-header {
     padding: 8px 15px;
   }
@@ -149,7 +124,7 @@ main {
     font-size: 1.2rem;
   }
   main {
-    padding: 0.5rem;
+    padding: 0.8rem;
   }
   .mic-button {
     width: 48px;
@@ -157,55 +132,5 @@ main {
     font-size: 20px;
     bottom: 15px;
     right: 15px;
-  }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-  .App-header {
-    padding: 9px 18px;
-  }
-  .header-content {
-    gap: 12px;
-  }
-  .App-logo {
-    height: 38px;
-  }
-  .App-header h1 {
-    font-size: 1.4rem;
-  }
-  main {
-    padding: 0.8rem;
-  }
-  .mic-button {
-    width: 52px;
-    height: 52px;
-    font-size: 21px;
-    bottom: 18px;
-    right: 18px;
-  }
-}
-
-@media (min-width: 901px) {
-  .App-header {
-    padding: 10px 20px;
-  }
-  .header-content {
-    gap: 15px;
-  }
-  .App-logo {
-    height: 40px;
-  }
-  .App-header h1 {
-    font-size: 1.5rem;
-  }
-  main {
-    padding: 1rem;
-  }
-  .mic-button {
-    width: 55px;
-    height: 55px;
-    font-size: 22px;
-    bottom: 20px;
-    right: 20px;
   }
 }

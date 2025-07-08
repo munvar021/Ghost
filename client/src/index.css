@@ -1,7 +1,18 @@
+:root {
+  --dark-bg: #000000; /* Pure black background */
+  --text-color: #ffffff; /* Pure white text */
+  --glass-bg: rgba(0, 0, 0, 0.2); /* Semi-transparent black for glass effect */
+  --glass-border: rgba(255, 255, 255, 0.1); /* Subtle white border for glass effect */
+  --button-bg: #ffffff; /* White button background */
+  --button-text-color: #000000; /* Black text for buttons */
+  --button-hover-bg: #e0e0e0; /* Light grey on button hover */
+  --primary-accent: #ffffff; /* White for primary accent */
+}
+
 html {
   box-sizing: border-box;
-  font-size: 16px; /* Base font size for responsiveness */
-  height: 100%; /* Ensure html takes full height */
+  font-size: 15px;
+  height: 100%;
 }
 
 *,
@@ -15,28 +26,31 @@ body {
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #121212; /* Very dark grey, almost black */
-  color: #e0e0e0; /* Light grey for readability */
+  background-color: var(--dark-bg);
+  color: var(--text-color);
   overflow-x: hidden;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   height: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Fira Code', 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
 }
 
-/* Styling for code blocks */
 pre {
-  background-color: #1e1e1e; /* Slightly lighter dark grey for code background */
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px); /* Glassmorphism blur */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow-x: auto;
   position: relative;
   margin: 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 pre code {
@@ -45,65 +59,42 @@ pre code {
   line-height: 1.4;
 }
 
-/* Styling for the copy button */
 pre button {
-  background-color: #333333; /* Darker button */
-  color: #e0e0e0;
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
   border: none;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.8em;
+  font-weight: bold;
   position: absolute;
   top: 10px;
   right: 10px;
   opacity: 0.8;
-  transition: opacity 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 pre button:hover {
+  background-color: var(--button-hover-bg);
   opacity: 1;
+  transform: translateY(-1px);
 }
 
-/* Responsive Design - Global */
-@media (max-width: 600px) {
-  body {
-    font-size: 12px;
-  }
-  pre {
-    padding: 10px;
-    border-radius: 8px;
-  }
-  pre button {
-    padding: 4px 8px;
-    font-size: 0.7em;
-  }
+pre button:active {
+  transform: translateY(0);
 }
 
-@media (min-width: 601px) and (max-width: 900px) {
+
+@media (max-width: 768px) {
   body {
-    font-size: 14px;
+    font-size: 0.9rem;
   }
   pre {
     padding: 12px;
-    border-radius: 9px;
   }
   pre button {
     padding: 5px 10px;
-    font-size: 0.8em;
-  }
-}
-
-@media (min-width: 901px) {
-  body {
-    font-size: 16px;
-  }
-  pre {
-    padding: 15px;
-    border-radius: 10px;
-  }
-  pre button {
-    padding: 5px 10px;
-    font-size: 0.8em;
+    font-size: 0.75em;
   }
 }

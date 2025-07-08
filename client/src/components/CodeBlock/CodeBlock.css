@@ -1,50 +1,45 @@
 .code-block-container {
   position: relative;
-  margin: 10px 0; /* Add some margin around the code block */
+  margin: 10px 0; /* Compact margin */
 }
 
 .copy-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 8px; /* Compact positioning */
+  right: 8px; /* Compact positioning */
   z-index: 10;
-  padding: 5px 10px;
-  background-color: #333333; /* Darker button */
-  color: #e0e0e0;
-  border: none;
-  border-radius: 5px;
+  padding: 6px 12px; /* Compact padding */
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  border: 1px solid var(--glass-border); /* Add glass border */
+  border-radius: 5px; /* Slightly less rounded */
   cursor: pointer;
-  font-size: 0.8em;
-  opacity: 0.8;
-  transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  font-size: 0.75em; /* Compact font size */
+  font-weight: bold;
+  opacity: 0.85;
+  transition: all 0.2s ease-in-out; /* Faster transition */
 }
 
 .copy-button:hover {
+  background-color: var(--button-hover-bg);
   opacity: 1;
-  background-color: #555555; /* Slightly lighter on hover */
+  transform: translateY(-1px) scale(1.02); /* Subtle lift and scale */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Design - CodeBlock specific */
-@media (max-width: 600px) {
+.copy-button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
   .code-block-container {
     margin: 8px 0;
   }
   .copy-button {
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
+    top: 6px;
+    right: 6px;
+    padding: 5px 10px;
     font-size: 0.7em;
-  }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-  .code-block-container {
-    margin: 9px 0;
-  }
-  .copy-button {
-    top: 9px;
-    right: 9px;
-    padding: 5px 9px;
-    font-size: 0.75em;
   }
 }
