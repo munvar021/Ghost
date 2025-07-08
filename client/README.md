@@ -47,9 +47,13 @@ Create a `.env` file in the `client` directory:
 
 ```
 REACT_APP_SERVER_URL=http://localhost:4000
+REACT_APP_WS_URL=ws://localhost:4000
+REACT_APP_BACKEND_URL=http://localhost:4000
 ```
 
-*   `REACT_APP_SERVER_URL`: The URL of your backend server.
+*   `REACT_APP_SERVER_URL`: The base URL for the client-side application.
+*   `REACT_APP_WS_URL`: The WebSocket URL for connecting to the backend.
+*   `REACT_APP_BACKEND_URL`: The base URL for API calls to the backend.
 
 ### 4. Run the Application
 

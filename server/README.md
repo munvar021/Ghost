@@ -60,6 +60,7 @@ OPENAI_API_KEY=your_openai_api_key
 *   `PORT`: The port your server will run on (default is `4000`).
 *   `GOOGLE_API_KEY`: Your API key for Google Generative AI (Gemini).
 *   `OPENAI_API_KEY`: Your API key for OpenAI.
+*   `CLIENT_URL`: The URL of your frontend client (e.g., `http://localhost:3000`).
 
 ### 4. Run the Server
 

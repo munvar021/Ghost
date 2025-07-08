@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000;
 // Connect to database
 connectDB();
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 
 app.use("/api/resume", resumeRoutes);

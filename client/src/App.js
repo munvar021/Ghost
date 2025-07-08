@@ -136,7 +136,7 @@ const App = () => {
       return; // Already connected
     }
 
-    const ws = new WebSocket("ws://localhost:4000");
+    const ws = new WebSocket(process.env.REACT_APP_WS_URL);
     wsRef.current = ws;
 
     const heartbeat = () => {
