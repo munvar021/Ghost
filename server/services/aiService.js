@@ -12,7 +12,10 @@ exports.getAIResponse = async function* (question, resumeText) {
   const prompt = `You are an AI interview assistant. Answer the interviewer\'s question. If the question is related to the resume, use the provided resume for context. Otherwise, answer based on your general knowledge. Please format your answers using Markdown for readability (e.g., use headings, bullet points, bold text where appropriate).\n\nResume: ${resumeText}\n\nInterviewer\'s Question: ${question}`;
 
   try {
-    const result = await model.generateContentStream(prompt);
+    const result = await model.generateContentStream({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 500 },
+    });
     for await (const chunk of result.stream) {
       yield chunk.text();
     }
@@ -25,6 +28,8 @@ exports.getAIResponse = async function* (question, resumeText) {
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: prompt }],
         stream: true,
+        temperature: 0.7,
+        max_tokens: 500,
       });
 
       for await (const chunk of stream) {
