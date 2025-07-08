@@ -1,115 +1,165 @@
-# AI Interview Assistant
+# Ghost Candidate
 
-## Project Overview
+## AI-Powered Interview Assistant
 
-![AI Interview Assistant Preview](./preview.png)
-*Note: Please replace `preview.png` with an actual screenshot of the application.*
-
-The AI Interview Assistant is a full-stack application designed to help users practice and prepare for job interviews. It allows users to upload their resume (PDF), after which an AI-powered interviewer asks questions and provides answers based on the resume content and general knowledge. The application features a conversational interface with speech-to-text for user questions and text-to-speech for AI responses, along with a real-time transcript display.
+Ghost Candidate is an interactive AI interview assistant designed to help users practice and prepare for job interviews. Users can upload their resumes, and the AI will ask relevant questions based on the resume content or general knowledge. The application features real-time communication, speech recognition for user input, and AI-generated responses, providing a dynamic and engaging interview simulation experience.
 
 ## Features
 
-*   **Resume Upload:** Upload PDF resumes to provide context for AI-generated questions and answers.
-*   **AI-Powered Interviewer:** Utilizes Google Generative AI (Gemini 1.5 Flash) to simulate an interview experience.
-*   **Speech-to-Text:** Converts user's spoken questions into text for AI processing.
-*   **Text-to-Speech:** Converts AI's text answers into natural-sounding speech.
-*   **Real-time Transcript:** Displays a live transcript of the conversation between the user and the AI.
-*   **Responsive UI:** A sleek and intuitive user interface that adapts to various screen sizes.
+*   **Resume Upload:** Securely upload your resume (PDF format) to provide context for the AI.
+*   **AI-Powered Interview Questions:** The AI generates interview questions based on your resume content or general interview best practices.
+*   **Real-time Interaction:** Engage in a live interview simulation with the AI.
+*   **Speech Recognition:** Speak your answers naturally, and the application will transcribe them.
+*   **AI Response Streaming:** AI answers are streamed in real-time, reducing perceived latency and improving user experience.
+*   **Intelligent Caching:** Frequently asked questions and their answers are cached to provide faster responses and reduce API calls.
+*   **Robust WebSocket Connection:** Implemented with heartbeat and reconnection logic for stable communication.
+*   **Sleek User Interface:** Modern, compact, and dark-themed UI with glassmorphism effects and subtle animations for an enhanced user experience.
 
 ## Technologies Used
 
 ### Frontend (Client)
 
 *   **React.js:** A JavaScript library for building user interfaces.
-*   **Axios:** Promise-based HTTP client for making API requests.
-*   **Web Speech API:** For speech recognition and synthesis.
-*   **React Markdown:** For rendering Markdown content in AI answers.
+*   **CSS:** For styling, including custom variables, animations, and glassmorphism effects.
 *   **Font Awesome:** For icons.
-*   **CSS:** For styling, including responsive design.
+*   **Web Speech API:** For speech recognition and synthesis (though synthesis is currently disabled).
+*   **WebSockets:** For real-time communication with the backend.
 
 ### Backend (Server)
 
 *   **Node.js:** JavaScript runtime environment.
 *   **Express.js:** Web application framework for Node.js.
-*   **Multer:** Middleware for handling `multipart/form-data`, primarily used for file uploads.
-*   **pdf-parse:** A library to extract text from PDF files.
-*   **@google/generative-ai:** Official Google Generative AI SDK for interacting with Gemini models.
-*   **CORS:** Middleware to enable Cross-Origin Resource Sharing.
-*   **Dotenv:** For loading environment variables from a `.env` file.
-*   **Nodemon:** A tool that helps develop Node.js applications by automatically restarting the node application when file changes in the directory are detected.
+*   **MongoDB:** NoSQL database for storing resume data and AI response cache.
+*   **Mongoose:** MongoDB object data modeling (ODM) for Node.js.
+*   **`ws`:** WebSocket library for Node.js.
+*   **`pdf-parse`:** For extracting text from PDF resumes.
+*   **Google Generative AI API (Gemini):** Primary AI model for generating interview responses.
+*   **OpenAI API (GPT-3.5 Turbo):** Fallback AI model for generating interview responses.
+*   **`dotenv`:** For managing environment variables.
+*   **`cors`:** Node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 
-## Setup Instructions
+## Setup and Installation
 
-To set up and run this project locally, follow these steps:
+Follow these steps to get Ghost Candidate up and running on your local machine.
+
+### Prerequisites
+
+*   Node.js (v18 or higher recommended)
+*   npm (comes with Node.js)
+*   MongoDB (local instance or a cloud-hosted service like MongoDB Atlas)
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository_url>
-cd ai-interview-assistant
+git clone https://github.com/your-username/ghost-candidate.git
+cd ghost-candidate
 ```
 
-### 2. Backend Setup
+### 2. Install Dependencies
 
-Navigate to the `server` directory:
-
-```bash
-cd server
-```
-
-Install dependencies:
+Navigate into both the `client` and `server` directories and install their respective dependencies.
 
 ```bash
+# Install client dependencies
+cd client
+npm install
+
+# Install server dependencies
+cd ../server
 npm install
 ```
 
-Create a `.env` file in the `server` directory and add your Google API Key:
+### 3. Configure Environment Variables
+
+Create `.env` files in both the `client` and `server` directories.
+
+#### `server/.env`
 
 ```
-GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
+MONGO_URI=your_mongodb_connection_string
+PORT=4000
+GOOGLE_API_KEY=your_google_generative_ai_api_key
+OPENAI_API_KEY=your_openai_api_key
 ```
 
-You can obtain a Google API Key from the [Google AI Studio](https://aistudio.google.com/app/apikey).
+*   `MONGO_URI`: Your MongoDB connection string (e.g., `mongodb://localhost:27017/ghostcandidate` for a local instance, or a MongoDB Atlas connection string).
+*   `PORT`: The port your server will run on (default is `4000`).
+*   `GOOGLE_API_KEY`: Your API key for Google Generative AI (Gemini).
+*   `OPENAI_API_KEY`: Your API key for OpenAI.
 
-Start the backend server:
+#### `client/.env`
+
+```
+REACT_APP_SERVER_URL=http://localhost:4000
+```
+
+*   `REACT_APP_SERVER_URL`: The URL of your backend server.
+
+### 4. Run the Application
+
+#### Start the Backend Server
+
+From the `server` directory:
+
+```bash
+npm start
+# Or, if you have nodemon installed for automatic restarts:
+# nodemon server.js
+```
+
+The server should start on `http://localhost:4000` (or your specified port). You should see a "MongoDB connected" message in the console.
+
+#### Start the Frontend Client
+
+From the `client` directory:
 
 ```bash
 npm start
 ```
 
-The server will run on `http://localhost:4000`.
-
-### 3. Frontend Setup
-
-Open a new terminal and navigate to the `client` directory:
-
-```bash
-cd ../client
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start the frontend development server:
-
-```bash
-npm start
-```
-
-The client application will open in your browser at `http://localhost:3000`.
+This will open the application in your browser at `http://localhost:3000`.
 
 ## Usage
 
-1.  **Upload Resume:** On the home page, click "Upload Resume" and select a PDF file.
-2.  **Start Interview:** Once the resume is processed, the microphone button will appear. Click it to start the interview.
-3.  **Ask Questions:** Speak your interview questions clearly. The application will transcribe your question and send it to the AI.
-4.  **Receive Answers:** The AI will process your question (using your resume for context if relevant) and respond verbally and in the transcript.
-5.  **Continue Conversation:** The microphone will automatically reactivate after the AI finishes speaking, allowing for a continuous conversation.
+1.  **Upload Resume:** On the landing page, click the "Upload Resume" button and select your PDF resume.
+2.  **Start Interview:** Once the resume is processed, the AI will begin asking questions.
+3.  **Speak Your Answers:** Click the microphone button and speak your answers. The application will transcribe your speech and send it to the AI.
+4.  **Receive AI Feedback:** The AI will respond in real-time, providing a dynamic interview experience.
 
-## Preview
+## Project Structure
 
-![AI Interview Assistant Preview](./preview.png)
-*Note: Please replace `preview.png` with an actual screenshot of the application.*
+```
+ghost-candidate/
+├── client/                 # Frontend React application
+│   ├── public/             # Static assets
+│   ├── src/                # React source code
+│   │   ├── components/     # Reusable UI components (e.g., ResumeUploader, TranscriptDisplay)
+│   │   ├── services/       # API and WebSocket communication logic
+│   │   ├── App.js          # Main application component
+│   │   ├── App.css         # Main application styles
+│   │   └── index.css       # Global styles and CSS variables
+│   └── package.json        # Frontend dependencies
+├── server/                 # Backend Node.js application
+│   ├── config/             # Database configuration
+│   ├── controllers/        # Request handlers and WebSocket logic
+│   ├── models/             # Mongoose schemas for MongoDB
+│   ├── routes/             # API routes
+│   ├── services/           # AI integration logic
+│   ├── server.js           # Main server entry point
+│   └── package.json        # Backend dependencies
+└── README.md               # Project README file
+```
+
+## Future Enhancements
+
+*   **User Authentication:** Implement user login and registration.
+*   **Interview History:** Allow users to review past interview sessions.
+*   **Performance Analytics:** Provide detailed feedback on interview performance (e.g., common keywords, speaking pace).
+*   **More AI Models:** Integrate with other AI models for diverse interview styles.
+*   **Customizable Interview Topics:** Allow users to select specific topics or roles for the interview.
+*   **Text-based Input Option:** Provide an alternative for users who prefer typing their answers.
+*   **Improved Error Handling:** More robust and user-friendly error messages.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

@@ -19,4 +19,7 @@ const ResumeSchema = new mongoose.Schema({
   qaCache: [QACacheSchema],
 });
 
+ResumeSchema.index({ text: "text" }); // For full-text search on resume content
+ResumeSchema.index({ "qaCache.question": 1 }); // For efficient lookup of questions in cache
+
 module.exports = mongoose.model("Resume", ResumeSchema);

@@ -22,7 +22,14 @@ exports.handleWebSocketConnection = (ws) => {
   console.log("Client connected");
 
   ws.on("message", async (message) => {
-    const { question, resumeId } = JSON.parse(message);
+    const parsedMessage = JSON.parse(message);
+
+    if (parsedMessage.type === "ping") {
+      ws.send(JSON.stringify({ type: "pong" }));
+      return;
+    }
+
+    const { question, resumeId } = parsedMessage;
 
     if (!question || !resumeId) {
       ws.send(JSON.stringify({ error: "Missing question or resume ID." }));
@@ -39,15 +46,26 @@ exports.handleWebSocketConnection = (ws) => {
       const cachedQA = resume.qaCache.find((qa) => qa.question === question);
       if (cachedQA) {
         console.log("Returning cached answer.");
-        ws.send(JSON.stringify({ answer: cachedQA.answer }));
+        ws.send(JSON.stringify({ answer: cachedQA.answer, isFinal: true })); // Send cached answer as final
         return;
       }
 
-      const answer = await getAIResponse(question, resume.text);
-      resume.qaCache.push({ question, answer });
-      await resume.save();
+      let fullAnswer = "";
+      for await (const chunk of getAIResponse(question, resume.text)) {
+        fullAnswer += chunk;
+        ws.send(JSON.stringify({ answer: chunk, isFinal: false })); // Send each chunk
+      }
 
-      ws.send(JSON.stringify({ answer }));
+      // After all chunks are received, send a final message to indicate completion
+      ws.send(JSON.stringify({ answer: "", isFinal: true }));
+
+      // Save the full answer to cache
+      await Resume.findOneAndUpdate(
+        { _id: resumeId },
+        { $push: { qaCache: { question, answer: fullAnswer } } },
+        { new: true }
+      );
+
     } catch (error) {
       console.error("Error during WebSocket communication:", error);
       ws.send(JSON.stringify({ error: "An internal error occurred." }));

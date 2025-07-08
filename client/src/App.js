@@ -16,6 +16,14 @@ const App = () => {
   const wsRef = useRef(null);
   const speakRef = useRef();
   const startRecognitionRef = useRef();
+  const currentAnswerRef = useRef(""); // Ref to accumulate streaming answer
+
+  // WebSocket reconnection and heartbeat variables
+  const reconnectAttempts = useRef(0);
+  const maxReconnectAttempts = 10;
+  const reconnectDelay = useRef(1000); // Initial delay 1 second
+  const heartbeatIntervalRef = useRef(null);
+  const pingTimeoutRef = useRef(null);
 
   const stopRecognition = useCallback(() => {
     if (recognitionRef.current) {
@@ -60,6 +68,9 @@ const App = () => {
       if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
         console.log("Sending question via WebSocket:", question);
         wsRef.current.send(JSON.stringify({ question, resumeId }));
+        // Add a placeholder for the AI's answer immediately
+        setTranscript((prev) => [...prev, { type: "answer", text: "" }]);
+        currentAnswerRef.current = ""; // Reset current answer accumulator
       } else {
         console.error("WebSocket is not connected.");
         setTranscript((prev) => [
@@ -120,31 +131,63 @@ const App = () => {
     recognition.start();
   }, [getAIResponse, stopRecognition]);
 
-  useEffect(() => {
-    speakRef.current = speak;
-    startRecognitionRef.current = startRecognition;
-  }, [speak, startRecognition]);
-
-  useEffect(() => {
-    if (!resumeId) return;
+  const connectWebSocket = useCallback(() => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      return; // Already connected
+    }
 
     const ws = new WebSocket("ws://localhost:4000");
     wsRef.current = ws;
 
+    const heartbeat = () => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: "ping" }));
+        pingTimeoutRef.current = setTimeout(() => {
+          console.warn("WebSocket ping timeout. Terminating connection.");
+          ws.terminate();
+        }, 5000); // 5 seconds to receive pong
+      }
+    };
+
     ws.onopen = () => {
       console.log("WebSocket connected");
       setIsWsConnected(true);
-      startRecognitionRef.current();
+      reconnectAttempts.current = 0; // Reset reconnect attempts on successful connection
+      reconnectDelay.current = 1000; // Reset delay
+      heartbeatIntervalRef.current = setInterval(heartbeat, 30000); // Send ping every 30 seconds
+      if (resumeId) {
+        startRecognitionRef.current();
+      }
     };
 
     ws.onmessage = (event) => {
+      clearTimeout(pingTimeoutRef.current);
       const data = JSON.parse(event.data);
-      if (data.answer) {
-        setTranscript((prev) => [
-          ...prev,
-          { type: "answer", text: data.answer },
-        ]);
-        speakRef.current(data.answer);
+      if (data.type === "pong") {
+        // console.log("Received pong.");
+        return;
+      }
+
+      if (data.answer !== undefined) {
+        if (data.isFinal === false) {
+          // Append chunk to the current answer
+          currentAnswerRef.current += data.answer;
+          setTranscript((prev) => {
+            const newTranscript = [...prev];
+            // Update the last item (which should be the AI's answer placeholder)
+            newTranscript[newTranscript.length - 1] = {
+              ...newTranscript[newTranscript.length - 1],
+              text: currentAnswerRef.current,
+            };
+            return newTranscript;
+          });
+        } else if (data.isFinal === true) {
+          // Final chunk received, speak the full answer
+          // if (currentAnswerRef.current) {
+          //   speakRef.current(currentAnswerRef.current);
+          // }
+          currentAnswerRef.current = ""; // Reset for next answer
+        }
       } else if (data.error) {
         console.error("WebSocket server error:", data.error);
         setTranscript((prev) => [
@@ -157,21 +200,62 @@ const App = () => {
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
       setIsWsConnected(false);
+      clearInterval(heartbeatIntervalRef.current);
+      clearTimeout(pingTimeoutRef.current);
     };
 
     ws.onclose = () => {
       console.log("WebSocket disconnected");
       setIsWsConnected(false);
+      clearInterval(heartbeatIntervalRef.current);
+      clearTimeout(pingTimeoutRef.current);
       stopRecognition();
+
+      if (reconnectAttempts.current < maxReconnectAttempts) {
+        reconnectAttempts.current++;
+        const delay =
+          reconnectDelay.current * Math.pow(2, reconnectAttempts.current - 1);
+        reconnectDelay.current = Math.min(delay, 30000); // Cap delay at 30 seconds
+        console.log(
+          `Attempting to reconnect in ${
+            reconnectDelay.current / 1000
+          } seconds... (Attempt ${reconnectAttempts.current})`
+        );
+        setTimeout(connectWebSocket, reconnectDelay.current);
+      } else {
+        console.error(
+          "Max reconnect attempts reached. Please refresh the page."
+        );
+        setTranscript((prev) => [
+          ...prev,
+          {
+            type: "error",
+            text: "Connection lost. Max reconnect attempts reached.",
+          },
+        ]);
+      }
     };
+  }, [resumeId, stopRecognition]);
+
+  useEffect(() => {
+    speakRef.current = speak;
+    startRecognitionRef.current = startRecognition;
+  }, [speak, startRecognition]);
+
+  useEffect(() => {
+    if (resumeId) {
+      connectWebSocket();
+    }
 
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
       }
+      clearInterval(heartbeatIntervalRef.current);
+      clearTimeout(pingTimeoutRef.current);
       stopRecognition();
     };
-  }, [resumeId, stopRecognition]);
+  }, [resumeId, connectWebSocket, stopRecognition]);
 
   return (
     <div className="App">

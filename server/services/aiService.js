@@ -8,29 +8,31 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-exports.getAIResponse = async (question, resumeText) => {
-  try {
-    const prompt = `You are an AI interview assistant. Answer the interviewer\'s question. If the question is related to the resume, use the provided resume for context. Otherwise, answer based on your general knowledge. Please format your answers using Markdown for readability (e.g., use headings, bullet points, bold text where appropriate).\n\nResume: ${resumeText}\n\nInterviewer\'s Question: ${question}`;
+exports.getAIResponse = async function* (question, resumeText) {
+  const prompt = `You are an AI interview assistant. Answer the interviewer\'s question. If the question is related to the resume, use the provided resume for context. Otherwise, answer based on your general knowledge. Please format your answers using Markdown for readability (e.g., use headings, bullet points, bold text where appropriate).\n\nResume: ${resumeText}\n\nInterviewer\'s Question: ${question}`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
+  try {
+    const result = await model.generateContentStream(prompt);
+    for await (const chunk of result.stream) {
+      yield chunk.text();
+    }
   } catch (error) {
     console.error("Error with Google Generative AI API:", error);
     console.log("Falling back to OpenAI API...");
 
     try {
-      const prompt = `You are an AI interview assistant. Answer the interviewer\'s question. If the question is related to the resume, use the provided resume for context. Otherwise, answer based on your general knowledge. Please format your answers using Markdown for readability (e.g., use headings, bullet points, bold text where appropriate).\n\nResume: ${resumeText}\n\nInterviewer\'s Question: ${question}`;
-
-      const response = await openai.chat.completions.create({
+      const stream = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [{ role: "user", content: prompt }],
+        stream: true,
       });
 
-      return response.choices[0].message.content;
+      for await (const chunk of stream) {
+        yield chunk.choices[0]?.delta?.content || "";
+      }
     } catch (openaiError) {
       console.error("Error with OpenAI API:", openaiError);
-      return "Error with both Google and OpenAI APIs.";
+      yield "Error with both Google and OpenAI APIs.";
     }
   }
 };
