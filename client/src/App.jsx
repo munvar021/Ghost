@@ -262,11 +262,11 @@ const App = () => {
       <header className="App-header">
         <div className="header-content">
           <img
-            src="https://static.vecteezy.com/system/resources/previews/048/847/814/non_2x/halloween-famine-ghost-logo-illustration-silhouette-design-black-and-white-vector.jpg"
+            src={`${process.env.PUBLIC_URL}/logo192.png`}
             className="App-logo"
             alt="logo"
           />
-          <h1>Ghost Candidate</h1>
+          <h1>Ghost</h1>
         </div>
       </header>
       <main className={!resumeId ? "main-centered" : "main-compact"}>

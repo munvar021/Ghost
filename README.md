@@ -1,8 +1,10 @@
-# Ghost Candidate
+# Ghost
+
+![Ghost Preview](https://res.cloudinary.com/dnkjgw2ti/image/upload/v1752301354/Screenshot_2025-07-12_at_11.51.18_dmzxxw.png)
 
 ## AI-Powered Interview Assistant
 
-Ghost Candidate is an interactive AI interview assistant designed to help users practice and prepare for job interviews. Users can upload their resumes, and the AI will ask relevant questions based on the resume content or general knowledge. The application features real-time communication, speech recognition for user input, and AI-generated responses, providing a dynamic and engaging interview simulation experience.
+Ghost is an interactive AI interview assistant designed to help users practice and prepare for job interviews. Users can upload their resumes, and the AI will ask relevant questions based on the resume content or general knowledge. The application features real-time communication, speech recognition for user input, and AI-generated responses, providing a dynamic and engaging interview simulation experience.
 
 ## Features
 
@@ -40,7 +42,7 @@ Ghost Candidate is an interactive AI interview assistant designed to help users 
 
 ## Setup and Installation
 
-Follow these steps to get Ghost Candidate up and running on your local machine.
+Follow these steps to get Ghost up and running on your local machine.
 
 ### Prerequisites
 

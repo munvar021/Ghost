@@ -1,6 +1,8 @@
-# Client (Frontend) - Ghost Candidate
+# Client (Frontend) - Ghost
 
-This directory contains the frontend React application for Ghost Candidate, an AI-powered interview assistant.
+![Ghost Preview](https://res.cloudinary.com/dnkjgw2ti/image/upload/v1752301354/Screenshot_2025-07-12_at_11.51.18_dmzxxw.png)
+
+This directory contains the frontend React application for Ghost, an AI-powered interview assistant.
 
 ## Features
 

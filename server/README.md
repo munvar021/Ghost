@@ -1,6 +1,6 @@
-# Server (Backend) - Ghost Candidate
+# Server (Backend) - Ghost
 
-This directory contains the backend Node.js application for Ghost Candidate, an AI-powered interview assistant.
+This directory contains the backend Node.js application for Ghost, an AI-powered interview assistant.
 
 ## Features
 
