@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../CodeBlock/CodeBlock';
 import './TranscriptDisplay.css';
@@ -39,4 +39,4 @@ const TranscriptDisplay = ({ transcript }) => {
   );
 };
 
-export default TranscriptDisplay;
+export default memo(TranscriptDisplay);

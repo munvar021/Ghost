@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, lazy, Suspense } from "react";
 import { uploadResume } from "./services/api";
-import ResumeUploader from "./components/ResumeUploader/ResumeUploader";
 import TranscriptDisplay from "./components/TranscriptDisplay/TranscriptDisplay";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
+const ResumeUploader = lazy(() => import("./components/ResumeUploader/ResumeUploader"));
 
 const App = () => {
   const [resumeId, setResumeId] = useState(null);
@@ -93,7 +93,7 @@ const App = () => {
       stopRecognition();
     }
     const recognition = new SpeechRecognition();
-    recognition.continuous = false; // Process single utterance
+    recognition.continuous = true; // Process single utterance
     recognition.interimResults = false;
 
     recognition.onstart = () => {
@@ -271,7 +271,9 @@ const App = () => {
       </header>
       <main className={!resumeId ? "main-centered" : "main-compact"}>
         {!resumeId ? (
-          <ResumeUploader onUpload={handleResumeUpload} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ResumeUploader onUpload={handleResumeUpload} />
+          </Suspense>
         ) : (
           <>
             <TranscriptDisplay transcript={transcript} />

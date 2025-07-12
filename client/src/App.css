@@ -60,7 +60,6 @@ main {
   margin-bottom: 1rem; /* Compact margin */
   font-style: italic;
   color: var(--text-color);
-  animation: pulse 1.5s infinite alternate;
   font-weight: 500;
 }
 
@@ -101,8 +100,6 @@ main {
 
 .mic-button:hover {
   background-color: var(--button-hover-bg);
-  transform: scale(1.1) translateY(-3px); /* More pronounced hover */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
 }
 
 .mic-button:active {
