@@ -171,13 +171,12 @@ const App = () => {
       if (data.answer !== undefined) {
         if (data.isFinal === false) {
           // Append chunk to the current answer
-          currentAnswerRef.current += data.answer;
           setTranscript((prev) => {
             const newTranscript = [...prev];
             // Update the last item (which should be the AI's answer placeholder)
             newTranscript[newTranscript.length - 1] = {
               ...newTranscript[newTranscript.length - 1],
-              text: currentAnswerRef.current,
+              text: newTranscript[newTranscript.length - 1].text + data.answer,
             };
             return newTranscript;
           });
